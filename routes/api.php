@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Product\ProductController;
+use App\Http\Controllers\Api\Transaction\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +23,11 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('login', [AuthController::class, 'login']);
+Route::get('check-auth', [AuthController::class, 'checkAuth']);
 
 Route::middleware('auth:sanctum')->group(function (){
-    Route::get('check-auth', [AuthController::class, 'checkAuth']);
+    Route::apiResources([
+        'barang' => ProductController::class,
+        'transaksi-detail' => TransactionController::class,
+    ]);
 });
