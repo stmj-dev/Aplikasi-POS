@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,13 +14,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Product::class);
-            $table->integer('amount');
-            $table->integer('count_product');
-            $table->timestamps();
-        });
+            DB::unprepared('
+                CREATE TRIGGER `stock_subtract` AFTER INSERT on `transactions` FOR EACH ROW
+                BEGIN
+                    UPDATE products SET stock=stock-NEW.count_product where id=NEW.product_id;
+                END
+            ');
     }
 
     /**
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        DB::unprepared('DROP TRIGGER "stock_subtract"');
     }
 };

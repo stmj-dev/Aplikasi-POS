@@ -14,11 +14,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('restocks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Product::class);
-            $table->integer('amount');
-            $table->integer('count_product');
+            $table->integer('re_stock');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('restocks');
     }
 };
